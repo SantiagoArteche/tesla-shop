@@ -16,9 +16,11 @@ type ValidTypes = "shirts" | "pants" | "hoodies" | "hats";
 
 interface SeedData {
   products: SeedProduct[];
+  categories: string[];
 }
 
 export const initialData: SeedData = {
+  categories: ["Shirts", "Pants", "Hoodies", "Hats"],
   products: [
     {
       description:
