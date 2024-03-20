@@ -1,22 +1,36 @@
-import {
-  SizeSelector,
-  QuantitySelector,
-  ProductSlideshow,
-  ProductSlideshowMobile,
-} from "@/components";
+export const revalidate = 604800;
+
+import { getProductBySlug } from "@/actions";
+import { ProductSlideshow, ProductSlideshowMobile } from "@/components";
 import { titleFont } from "@/config/fonts";
-import { initialData } from "@/seed/seed";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { StockLabel } from "../../../../components/product/stock-label/StockLabel";
+import { AddToCart } from "./ui/AddToCart";
 
 interface Props {
   params: {
     slug: string;
   };
 }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug);
 
-export default function ProductPage({ params }: Props) {
+  return {
+    title: `${product?.title}` ?? "Product not found",
+    description: "Specific product" ?? "",
+    openGraph: {
+      title: `${product?.title}` ?? "Product not found",
+      description: "Specific product" ?? "",
+      images: [`/products/${product?.images[2]}`],
+    },
+  };
+}
+
+export default async function ProductPage({ params }: Props) {
   const { slug } = params;
-  const product = initialData.products.find((prod) => prod.slug === slug);
+
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
@@ -37,16 +51,13 @@ export default function ProductPage({ params }: Props) {
         />
       </div>
       <div className="col-span-1 px-5 ">
+        <StockLabel slug={product.slug} />
         <h1 className={`${titleFont.className} antialiased font-bold text-xl`}>
           {product.title}
         </h1>
-        <p className="text-lg mb-5">{product.price}</p>
-        <SizeSelector
-          availableSizes={product.sizes}
-          selectedSize={product.sizes[0]}
-        />
-        <QuantitySelector quantity={1} stock={product.inStock} />
-        <button className="btn-primary my-5">Add to cart</button>
+
+        <p className=" mb-5 font-bold text-xl">${product.price}</p>
+        <AddToCart product={product} />
         <h3 className="font-bold text-sm">Description</h3>
         <p className="font-light">{product.description}</p>
       </div>

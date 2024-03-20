@@ -1,7 +1,13 @@
 import { Title } from "@/components";
+import { Metadata } from "next";
 
 import Link from "next/link";
 import { IoCardOutline } from "react-icons/io5";
+
+export const metadata: Metadata = {
+  title: "Orders",
+  description: "Your orders",
+};
 
 export default function OrdersPage() {
   return (

@@ -1,14 +1,18 @@
 import { QuantitySelector, Title } from "@/components";
+
 import { initialData } from "@/seed/seed";
+import { useCartStore } from "@/store";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { useState } from "react";
+import { ProductsInCart } from "./ui/ProductsInCart";
 
-const productsInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-];
+export const metadata: Metadata = {
+  title: "Cart",
+  description: "Cart with products",
+};
 
 export default function CartPage() {
   // redirect("/empty");
@@ -25,24 +29,7 @@ export default function CartPage() {
               Continua comprando
             </Link>
 
-            {productsInCart.map((product) => (
-              <div key={product.slug} className="flex mb-5">
-                <Image
-                  src={`/products/${product.images[0]}`}
-                  width={155}
-                  height={155}
-                  style={{ width: "150px", height: "150px" }}
-                  alt={product.title}
-                  className="mr-5 rounded"
-                />
-                <div>
-                  <p>{product.title}</p>
-                  <p>${product.price}</p>
-                  <QuantitySelector quantity={3} />
-                  <button className="underline mt-3">Remove</button>
-                </div>
-              </div>
-            ))}
+            <ProductsInCart />
           </div>
           <div className="bg-white rounded-xl shadow-xl p-7 h-fit">
             <h2 className="text-2xl mb-2">Order summary</h2>

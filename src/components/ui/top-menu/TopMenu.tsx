@@ -1,11 +1,17 @@
 "use client";
 import { titleFont } from "@/config/fonts";
-import { useUiStore } from "@/store";
+import { useCartStore, useUiStore } from "@/store";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
 
 export const TopMenu = () => {
   const openSideMenu = useUiStore((state) => state.openSideMenu);
+  const getTotalItems = useCartStore((state) => state.getTotalItems());
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
   return (
     <nav className="flex px-5 justify-between items-center w-full">
       <div>
@@ -20,25 +26,25 @@ export const TopMenu = () => {
       <div className="hidden sm:block">
         <Link
           className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
-          href="/category/unisex"
+          href="/gender/unisex"
         >
           Unisex
         </Link>
         <Link
           className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
-          href="/category/men"
+          href="/gender/men"
         >
           Men
         </Link>
         <Link
           className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
-          href="/category/women"
+          href="/gender/women"
         >
           Women
         </Link>
         <Link
           className="m-2 p-2 rounded-md transition-all hover:bg-gray-100"
-          href="/category/kid"
+          href="/gender/kid"
         >
           Kids
         </Link>
@@ -51,9 +57,12 @@ export const TopMenu = () => {
 
         <Link href="/cart">
           <div className="relative">
-            <span className="absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white">
-              3
-            </span>
+            {getTotalItems > 0 && loaded && (
+              <span className="absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white">
+                {getTotalItems ?? 0}
+              </span>
+            )}
+
             <IoCartOutline className="w-6 h-6" />
           </div>
         </Link>

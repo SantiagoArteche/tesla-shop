@@ -9,3 +9,4 @@ export * from "./product/quantity-selector/QuantitySelector";
 export * from "./product/slideshow/ProductSlideshow";
 export * from "./product/slideshow/ProductSlideshowMobile";
 export * from "./ui/footer/Footer";
+export * from "./ui/pagination/Pagination";

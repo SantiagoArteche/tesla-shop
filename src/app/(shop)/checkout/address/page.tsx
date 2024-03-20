@@ -1,5 +1,11 @@
 import { Title } from "@/components";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Address",
+  description: "Checkout",
+};
 
 export default function AdressPage() {
   return (

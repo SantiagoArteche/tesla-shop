@@ -1,6 +1,7 @@
 import { Title } from "@/components";
 import { initialData } from "@/seed/seed";
 import clsx from "clsx";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
@@ -16,6 +17,11 @@ interface Props {
     id: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Order",
+  description: "Specific order",
+};
 
 export default function OrderIdPage({ params }: Props) {
   const { id } = params;

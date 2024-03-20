@@ -1,5 +1,6 @@
 import { QuantitySelector, Title } from "@/components";
 import { initialData } from "@/seed/seed";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +9,11 @@ const productsInCart = [
   initialData.products[1],
   initialData.products[2],
 ];
+
+export const metadata: Metadata = {
+  title: "Checkout",
+  description: "Checkout",
+};
 
 export default function CheckoutPage() {
   return (
