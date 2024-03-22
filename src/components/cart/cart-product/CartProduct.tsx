@@ -13,9 +13,10 @@ interface Props {
 }
 
 export default function CartProduct({ product, inStock }: Props) {
-  const updateProductQuantity = useCartStore(
-    (state) => state.updateProductQuantity
+  const { updateProductQuantity, removeProductFromCart } = useCartStore(
+    (state) => state
   );
+
   return (
     <div key={product.slug} className="flex mb-5">
       <Image
@@ -39,7 +40,12 @@ export default function CartProduct({ product, inStock }: Props) {
           handleQuantity={(quant) => updateProductQuantity(product, quant)}
           stock={inStock}
         />
-        <button className="underline mt-3">Remove</button>
+        <button
+          className="underline mt-3"
+          onClick={() => removeProductFromCart(product)}
+        >
+          Remove
+        </button>
       </div>
     </div>
   );

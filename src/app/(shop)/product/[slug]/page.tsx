@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="mt-5 mb-20 grid md:grid-cols-3 gap-3">
-      <div className="col-span-1 md:col-span-2">
+      <div className="col-span-1 md:col-span-2 ">
         <ProductSlideshowMobile
           title={product.title}
           images={product.images}
