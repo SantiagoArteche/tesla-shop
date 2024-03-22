@@ -3,6 +3,10 @@ import prisma from "../lib/prisma";
 import { countries } from "./seed-countries";
 
 async function main() {
+  await prisma.orderAddress.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+  
   await prisma.userAddress.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();

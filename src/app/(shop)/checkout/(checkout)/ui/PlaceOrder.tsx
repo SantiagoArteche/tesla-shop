@@ -4,14 +4,43 @@ import { useAddressStore, useCartStore } from "@/store";
 
 import { useEffect, useState } from "react";
 import { currencyFormat } from "../../../../../utils/currencyFormat";
+import clsx from "clsx";
+import { placeOrder } from "@/actions/order";
+import { useRouter } from "next/navigation";
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const router = useRouter();
+  const onPlaceOrder = async () => {
+    setIsPlacingOrder(true);
+
+    const productsToOrder = cart.map((product) => ({
+      productId: product.id,
+      quantity: product.quantity,
+      size: product.size,
+    }));
+
+    const resp = await placeOrder(productsToOrder, address);
+
+    if (!resp.ok) {
+      setIsPlacingOrder(false);
+      setErrorMsg(resp.msg);
+      return;
+    }
+
+    clearCart();
+    router.replace("/orders/" + resp.order!.id);
+  };
 
   const address = useAddressStore((state) => state.address);
   const { itemsInCart, subTotal, tax, total } = useCartStore((state) =>
     state.getSummaryInfo()
   );
+
   useEffect(() => {
     setLoaded(true);
   }, []);
@@ -58,8 +87,13 @@ export const PlaceOrder = () => {
             <span className="underline">privacy politics</span>
           </span>
         </p>
+        {errorMsg !== "" && <p className="text-red-500 mb-3">{errorMsg}</p>}
         <button
-          /*href="/orders/123" */ className="flex btn-primary justify-center"
+          /*href="/orders/123" */ className={clsx({
+            "btn-primary": !isPlacingOrder,
+            "btn-disabled": isPlacingOrder,
+          })}
+          onClick={onPlaceOrder}
         >
           Place Order
         </button>

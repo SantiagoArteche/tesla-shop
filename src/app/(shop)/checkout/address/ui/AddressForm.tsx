@@ -59,7 +59,8 @@ export const AddressForm = ({
     validateOnMount: true,
 
     onSubmit: async (data) => {
-      setAddress({ ...data });
+      const { rememberAddress, ...rest } = data;
+      setAddress({ ...rest });
       if (data.rememberAddress) {
         await setUserAddress(data, userId);
       } else {

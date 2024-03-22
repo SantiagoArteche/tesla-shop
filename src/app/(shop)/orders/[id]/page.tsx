@@ -1,16 +1,14 @@
+import { getOrderById } from "@/actions/order/get-order-by-id";
 import { Title } from "@/components";
-import { initialData } from "@/seed/seed";
+import { currencyFormat } from "@/utils/currencyFormat";
+
 import clsx from "clsx";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { IoCartOutline } from "react-icons/io5";
+import { redirect } from "next/navigation";
 
-const productsInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-];
+import { IoCardOutline } from "react-icons/io5";
 
 interface Props {
   params: {
@@ -23,83 +21,125 @@ export const metadata: Metadata = {
   description: "Specific order",
 };
 
-export default function OrderIdPage({ params }: Props) {
+export default async function OrderIdPage({ params }: Props) {
   const { id } = params;
+
+  const { ok, order } = await getOrderById(params.id);
+
+  if (!ok) redirect("/");
+
+  const address = order!.OrderAddress;
+
+  const product = order!.OrderItem;
+
   return (
-    <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
-      <div className="flex flex-col w-[1000px]">
-        <Title title={`Order #${id}`} />
+    <>
+      <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
+        <div className="flex flex-col w-[1000px]">
+          <Title title={`Order #${id.split("-")[0]}`} />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-          <div className="flex flex-col mt-5">
-            <div
-              className={clsx(
-                "flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
-                { "bg-red-500": false, "bg-green-700": true }
-              )}
-            >
-              <IoCartOutline size={30} />
-              <span className="mx-2"></span>
-              <span className="mx-2">Paid</span>
-            </div>
-
-            {productsInCart.map((product) => (
-              <div key={product.slug} className="flex mb-5">
-                <Image
-                  src={`/products/${product.images[0]}`}
-                  width={155}
-                  height={155}
-                  style={{ width: "100px", height: "100px" }}
-                  alt={product.title}
-                  className="mr-5 rounded"
-                />
-                <div>
-                  <p>{product.title}</p>
-                  <p>$ {product.price} x3</p>
-                  <p className="font-bold">Subtotal: ${product.price * 3}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="bg-white rounded-xl shadow-xl p-7 flex flex-col justify-center">
-            <h2 className="text-2xl mb-2 font-bold">Delivery address</h2>
-            <div className="mb-10">
-              <p className="text-xl">Santiago Arteche</p>
-              <p>Sta fe 2859</p>
-              <p>Argentina</p>
-              <p>Sta Fe</p>
-              <p>Rosario</p>
-              <p>CP 2020</p>
-              <p>3413650110</p>
-            </div>
-            <div className="w-full h-0.5 rounded bg-gray-200 mb-10"></div>
-
-            <h2 className="text-2xl mb-2">Order summary</h2>
-            <div className="grid grid-cols-2">
-              <span>No. Product</span>
-              <span className="text-right">3 articles</span>
-              <span>Subtotal</span>
-              <span className="text-right">$ 100</span>
-              <span>Sales Tax</span>
-              <span className="text-right">15%</span>
-              <span className="text-3xl mt-3">Total:</span>
-              <span className="text-right text-3xl mt-3">$ 100</span>
-            </div>
-            <div className="mt-5 mb-2 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="flex flex-col mt-5">
               <div
                 className={clsx(
                   "flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
-                  { "bg-red-500": false, "bg-green-700": true }
+                  {
+                    "bg-red-500": !order!.isPaid,
+                    "bg-green-700": order!.isPaid,
+                  }
                 )}
               >
-                <IoCartOutline size={30} />
-                <span className="mx-2"></span>
-                <span className="mx-2">Paid</span>
+                <IoCardOutline size={30} />
+                <span className="mx-2">
+                  {" "}
+                  {order!.isPaid ? "Paid" : "Unpaid"}
+                </span>
+              </div>
+
+              {product!.map((prod) => (
+                <div
+                  key={prod.product.slug + prod.size}
+                  className="flex mb-5 items-center"
+                >
+                  <Image
+                    src={`/products/${prod.product.ProductImage[0].url}`}
+                    width={155}
+                    height={155}
+                    style={{ width: "150px", height: "150px" }}
+                    alt={prod.product.title}
+                    className="mr-5 rounded"
+                  />
+                  <div>
+                    <Link
+                      href={`/product/${prod.product.slug}`}
+                      className="hover:underline flex gap-1"
+                    >
+                      <p>{prod.size} </p> - <p> {prod.product.title}</p>
+                    </Link>
+                    <p>
+                      {" "}
+                      {currencyFormat(prod.product.price)} x {prod.quantity}
+                    </p>
+                    <p className="font-bold">
+                      {currencyFormat(prod.product.price * prod.quantity)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="bg-white rounded-xl shadow-xl p-7 flex flex-col justify-center">
+              <h2 className="text-2xl mb-2 font-bold">Delivery address</h2>
+              <div className="mb-10">
+                <p className="text-xl">
+                  {address!.firstName} {address!.lastName}
+                </p>
+                <p>{address!.address}</p>
+                <p>{address!.address2}</p>
+
+                <p>
+                  {address!.city}, {address!.countryId}
+                </p>
+                <p>{address!.postalCode}</p>
+                <p>{address!.phone}</p>
+              </div>
+              <div className="w-full h-0.5 rounded bg-gray-200 mb-10"></div>
+
+              <h2 className="text-2xl mb-2">Order summary</h2>
+              <div className="grid grid-cols-2">
+                <span>No. Product</span>
+                <span className="text-right">{order?.itemsInOrder}</span>
+                <span>Subtotal</span>
+                <span className="text-right">
+                  {currencyFormat(order!.subTotal)}
+                </span>
+                <span>Sales Tax (15%)</span>
+                <span className="text-right">{currencyFormat(order!.tax)}</span>
+                <span className="text-3xl mt-3">Total:</span>
+                <span className="text-right text-3xl mt-3">
+                  {currencyFormat(order!.total)}
+                </span>
+              </div>
+              <div className="mt-5  w-full">
+                <div
+                  className={clsx(
+                    "flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
+                    {
+                      "bg-red-500": !order!.isPaid,
+                      "bg-green-700": order!.isPaid,
+                    }
+                  )}
+                >
+                  <IoCardOutline size={30} />
+
+                  <span className="mx-2">
+                    {order!.isPaid ? "Paid" : "Unpaid"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

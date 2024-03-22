@@ -19,7 +19,6 @@ export const useAddressStore = create<State>()(
         city: "",
         country: "",
         phone: "",
-        rememberAddress: false,
       },
       setAddress(address) {
         set({ address });
