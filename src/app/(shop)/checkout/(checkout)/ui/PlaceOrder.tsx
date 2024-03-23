@@ -15,6 +15,7 @@ export const PlaceOrder = () => {
   const cart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
   const router = useRouter();
+
   const onPlaceOrder = async () => {
     setIsPlacingOrder(true);
 

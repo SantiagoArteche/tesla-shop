@@ -58,8 +58,6 @@ export const placeOrder = async (
     }
   );
 
-  console.log(productsId);
-
   try {
     const prismaTx = await prisma.$transaction(async (tx) => {
       const updatedProductPromises = products.map(async (product) => {

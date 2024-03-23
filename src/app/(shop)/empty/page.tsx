@@ -1,5 +1,11 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
+
+export const metadata: Metadata = {
+  title: "Cart",
+  description: "Empty cart",
+};
 
 export default function EmptyPage() {
   return (

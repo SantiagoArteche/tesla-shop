@@ -1,8 +1,10 @@
 "use client";
 
-import { deleteUserAddress, setUserAddress } from "@/actions";
+import { deleteUserAddress, setUserAddress } from "@/actions/address";
+
 import { type Address } from "@/interfaces/address.interface";
 import type { Country } from "@/interfaces/country.interface";
+
 import { useAddressStore } from "@/store";
 
 import { useFormik } from "formik";
@@ -35,53 +37,47 @@ export const AddressForm = ({
 }: Props) => {
   const { address, setAddress } = useAddressStore((state) => state);
   const router = useRouter();
-  const {
-    handleChange,
-    handleSubmit,
-    resetForm,
-    values,
-    validateForm,
-    isValid,
-  } = useFormik<FormInputs>({
-    initialValues: userStoredAddress
-      ? { ...(userStoredAddress as any), rememberAddress: false }
-      : {
-          firstName: "",
-          lastName: "",
-          address: "",
-          address2: "",
-          postalCode: "",
-          city: "",
-          country: "",
-          phone: "",
-          rememberAddress: false,
-        },
-    validateOnMount: true,
+  const { handleChange, handleSubmit, resetForm, values } =
+    useFormik<FormInputs>({
+      initialValues: userStoredAddress
+        ? { ...(userStoredAddress as any), rememberAddress: false }
+        : {
+            firstName: "",
+            lastName: "",
+            address: "",
+            address2: "",
+            postalCode: "",
+            city: "",
+            country: "",
+            phone: "",
+            rememberAddress: false,
+          },
+      validateOnMount: true,
 
-    onSubmit: async (data) => {
-      const { rememberAddress, ...rest } = data;
-      setAddress({ ...rest });
-      if (data.rememberAddress) {
-        await setUserAddress(data, userId);
-      } else {
-        await deleteUserAddress(userId);
-      }
+      onSubmit: async (data) => {
+        const { rememberAddress, ...rest } = data;
+        setAddress({ ...rest });
+        if (data.rememberAddress) {
+          await setUserAddress(data, userId);
+        } else {
+          await deleteUserAddress(userId);
+        }
 
-      router.push("/checkout");
-    },
+        router.push("/checkout");
+      },
 
-    validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string().required("Last name is required"),
-      address2: Yup.string().optional(),
-      address: Yup.string().required("Address is required"),
-      postalCode: Yup.string().required("Postal code is required"),
-      city: Yup.string().required("City is required"),
-      country: Yup.string().required("Country is required"),
-      phone: Yup.string().required("Phone is required"),
-      rememberAddress: Yup.boolean().optional().default(false),
-    }),
-  });
+      validationSchema: Yup.object({
+        firstName: Yup.string().required("First name is required"),
+        lastName: Yup.string().required("Last name is required"),
+        address2: Yup.string().optional(),
+        address: Yup.string().required("Address is required"),
+        postalCode: Yup.string().required("Postal code is required"),
+        city: Yup.string().required("City is required"),
+        country: Yup.string().required("Country is required"),
+        phone: Yup.string().required("Phone is required"),
+        rememberAddress: Yup.boolean().optional().default(false),
+      }),
+    });
   const valuesFilled =
     values.phone.trim() !== "" &&
     values.address.trim() !== "" &&

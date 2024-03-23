@@ -6,6 +6,7 @@ interface Props {
   stock?: number;
   handleQuantity: (quant: number) => void | number;
 }
+
 export const QuantitySelector = ({
   quantity,
   stock = 1,

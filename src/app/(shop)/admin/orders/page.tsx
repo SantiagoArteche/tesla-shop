@@ -1,26 +1,14 @@
-export const revalidate = 0;
-
-import { getOrdersByUser } from "@/actions/order/get-orders-by-user";
+import { getOrdersPaginated } from "@/actions/order/get-paginated-orders";
 import { Title } from "@/components";
-import { Metadata } from "next";
-
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
 
-export const metadata: Metadata = {
-  title: "Orders",
-  description: "Your orders",
-};
+export default async function AdminOrdersPage() {
+  const { orders } = await getOrdersPaginated();
 
-export default async function OrdersPage() {
-  const { ok, orders } = await getOrdersByUser();
-
-  if (!ok) redirect("/auth/login");
   return (
-    <>
+    <div>
       <Title title="Orders" />
-
       <div className="mb-10">
         <table className="min-w-full">
           <thead className="bg-gray-200 border-b">
@@ -94,6 +82,6 @@ export default async function OrdersPage() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

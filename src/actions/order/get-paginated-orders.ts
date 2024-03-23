@@ -1,20 +1,17 @@
-"use server";
-
 import { auth } from "@/auth.config";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export const getOrdersByUser = async () => {
+export const getOrdersPaginated = async () => {
   const session = await auth();
 
-  if (!session?.user) {
-    return {
-      ok: false,
-      msg: "Must be authenticated",
-    };
+  if (session?.user.role !== "admin") {
+    redirect("/");
   }
+
   const orders = await prisma.order.findMany({
-    where: {
-      userId: session?.user.id,
+    orderBy: {
+      createdAt: "desc",
     },
     include: {
       OrderAddress: {
@@ -26,8 +23,5 @@ export const getOrdersByUser = async () => {
     },
   });
 
-  return {
-    ok: true,
-    orders,
-  };
+  return { ok: true, orders };
 };

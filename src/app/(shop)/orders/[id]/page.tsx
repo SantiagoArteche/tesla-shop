@@ -1,5 +1,5 @@
 import { getOrderById } from "@/actions/order/get-order-by-id";
-import { Title } from "@/components";
+import { PayPalButton, Title } from "@/components";
 import { currencyFormat } from "@/utils/currencyFormat";
 
 import clsx from "clsx";
@@ -16,10 +16,13 @@ interface Props {
   };
 }
 
-export const metadata: Metadata = {
-  title: "Order",
-  description: "Specific order",
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { ok, order } = await getOrderById(params.id);
+  return {
+    title: `Order #${order?.id.split("-")[0]}`,
+    description: "Specific order",
+  };
+}
 
 export default async function OrderIdPage({ params }: Props) {
   const { id } = params;
@@ -120,21 +123,11 @@ export default async function OrderIdPage({ params }: Props) {
                 </span>
               </div>
               <div className="mt-5  w-full">
-                <div
-                  className={clsx(
-                    "flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
-                    {
-                      "bg-red-500": !order!.isPaid,
-                      "bg-green-700": order!.isPaid,
-                    }
-                  )}
-                >
-                  <IoCardOutline size={30} />
-
-                  <span className="mx-2">
-                    {order!.isPaid ? "Paid" : "Unpaid"}
-                  </span>
-                </div>
+                <PayPalButton
+                  amount={order!.total}
+                  orderId={order!.id}
+                  isPaid={order!.isPaid}
+                />
               </div>
             </div>
           </div>
