@@ -1,10 +1,16 @@
 import { getOrdersPaginated } from "@/actions/order/get-paginated-orders";
-import { Title } from "@/components";
+import { Pagination, Title } from "@/components";
 import Link from "next/link";
 import { IoCardOutline } from "react-icons/io5";
+interface Props {
+  searchParams: {
+    page?: string;
+  };
+}
+export default async function AdminOrdersPage({ searchParams }: Props) {
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
-export default async function AdminOrdersPage() {
-  const { orders } = await getOrdersPaginated();
+  const { orders, totalPages } = await getOrdersPaginated({ page });
 
   return (
     <div>
@@ -81,6 +87,7 @@ export default async function AdminOrdersPage() {
             })}
           </tbody>
         </table>
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );

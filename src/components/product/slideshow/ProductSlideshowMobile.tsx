@@ -20,7 +20,7 @@ export const ProductSlideshowMobile = ({ images, title, className }: Props) => {
   return (
     <div className={className}>
       <Swiper
-        style={{ width: "95vw", height: "600px" }}
+        style={{ width: "85vw", height: "600px" }}
         navigation={true}
         modules={[FreeMode, Navigation, Pagination]}
         className="mySwiper2"

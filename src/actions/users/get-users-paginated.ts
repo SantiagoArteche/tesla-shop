@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@/auth.config";
 import prisma from "@/lib/prisma";
 
@@ -5,7 +7,8 @@ interface PaginationOption {
   page?: number;
   take?: number;
 }
-export const getOrdersPaginated = async ({
+
+export const getUsersPaginated = async ({
   take = 5,
   page = 1,
 }: PaginationOption) => {
@@ -18,25 +21,17 @@ export const getOrdersPaginated = async ({
     };
   }
 
-  const orders = await prisma.order.findMany({
+  const users = await prisma.user.findMany({
     take: take,
     skip: (page - 1) * take,
     orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      OrderAddress: {
-        select: {
-          firstName: true,
-          lastName: true,
-        },
-      },
+      name: "desc",
     },
   });
 
-  const totalCount = await prisma.order.count({});
+  const totalCount = await prisma.user.count({});
 
   const totalPages = Math.ceil(totalCount / take);
 
-  return { ok: true, orders, totalPages };
+  return { ok: true, users, totalPages };
 };
