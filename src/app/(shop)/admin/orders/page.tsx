@@ -87,7 +87,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             })}
           </tbody>
         </table>
-        <Pagination totalPages={totalPages} />
+        <Pagination totalPages={totalPages as number} />
       </div>
     </div>
   );

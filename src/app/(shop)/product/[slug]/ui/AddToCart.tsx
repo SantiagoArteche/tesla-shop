@@ -32,7 +32,7 @@ export const AddToCart = ({ product }: Props) => {
       quantity,
       size,
       ...product,
-      image: product.images[0],
+      image: product.images![0],
     };
 
     addProductToCart(cartProduct);

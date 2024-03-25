@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductImage } from "@/components/product/product-image/ProductImage";
 import { useCartStore } from "@/store";
 import { currencyFormat } from "@/utils/currencyFormat";
 import Image from "next/image";
@@ -24,8 +25,8 @@ export const ProductsCheckout = () => {
           key={product.slug + product.size}
           className="flex mb-5 items-center"
         >
-          <Image
-            src={`/products/${product.image}`}
+          <ProductImage
+            src={product.image}
             width={155}
             height={155}
             style={{ width: "150px", height: "150px" }}

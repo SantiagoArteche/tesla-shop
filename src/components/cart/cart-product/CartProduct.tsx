@@ -1,14 +1,14 @@
 "use client";
 
 import { QuantitySelector } from "@/components";
-import { CartProduct } from "@/interfaces/product.interface";
+import { ProductImage } from "@/components/product/product-image/ProductImage";
+import { CartProduct as CartProd } from "@/interfaces/product.interface";
 import { useCartStore } from "@/store";
 
-import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
-  product: CartProduct;
+  product: CartProd;
   inStock?: number;
 }
 
@@ -19,8 +19,8 @@ export default function CartProduct({ product, inStock }: Props) {
 
   return (
     <div key={product.slug} className="flex mb-5">
-      <Image
-        src={`/products/${product.image}`}
+      <ProductImage
+        src={product.image}
         width={155}
         height={155}
         style={{ width: "150px", height: "150px" }}
