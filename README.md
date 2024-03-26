@@ -4,7 +4,7 @@ E-commerce Tesla
 
 ## Run in dev
 
-1. Clone repository.
+1. Clone repository. `git clone https://github.com/SantiagoArteche/tesla-shop.git`
 2. Create a copy of `.env.template` and rename at `.env` and chande the environment variables.
 3. Install dependencies `npm install`
 4. Run database `docker compose up -d`
