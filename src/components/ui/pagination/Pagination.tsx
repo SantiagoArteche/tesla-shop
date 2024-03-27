@@ -49,6 +49,7 @@ export const Pagination = ({ totalPages }: Props) => {
                   : " text-gray-800 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
               }`}
               href={createPageUrl(currentPage - 1)}
+              aria-label="Link to last page"
             >
               <IoChevronBackOutline size={30} />
             </Link>
@@ -80,6 +81,7 @@ export const Pagination = ({ totalPages }: Props) => {
                   ? createPageUrl(currentPage + 2)
                   : createPageUrl(currentPage + 1)
               }
+              aria-label="Link to next page"
             >
               <IoChevronForwardOutline size={30} />
             </Link>
