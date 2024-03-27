@@ -21,7 +21,7 @@ export const OrderSummary = () => {
     <div className="grid grid-cols-2">
       <span>No. Product</span>
       <span className="text-right">
-        {itemsInCart === 1 ? "1 article" : `${itemsInCart} articles`}{" "}
+        {itemsInCart === 1 ? "1 item" : `${itemsInCart} items`}{" "}
       </span>
 
       <span>Subtotal</span>
