@@ -40,7 +40,7 @@ export const AddressForm = ({
   const { handleChange, handleSubmit, resetForm, values } =
     useFormik<FormInputs>({
       initialValues: userStoredAddress
-        ? { ...(userStoredAddress as any), rememberAddress: false }
+        ? { ...(userStoredAddress as FormInputs), rememberAddress: false }
         : {
             firstName: "",
             lastName: "",
